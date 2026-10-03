@@ -58,7 +58,7 @@ class FlowBoundaryCondition(BaseModel):
     parameters: dict[str, float] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def require_definition(self) -> "FlowBoundaryCondition":
+    def require_definition(self) -> FlowBoundaryCondition:
         if (
             self.kind not in {"wall", "moving_wall", "custom"}
             and self.value is None
@@ -81,7 +81,7 @@ class FlowQC(BaseModel):
     errors: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def consistent_status(self) -> "FlowQC":
+    def consistent_status(self) -> FlowQC:
         if self.passed and (
             self.errors
             or self.converged is False
@@ -104,7 +104,7 @@ class FlowSimulationRequest(BaseModel):
     settings: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def require_boundaries(self) -> "FlowSimulationRequest":
+    def require_boundaries(self) -> FlowSimulationRequest:
         if not self.boundary_conditions:
             raise ValueError("At least one flow boundary condition is required")
         return self
