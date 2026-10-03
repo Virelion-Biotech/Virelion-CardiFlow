@@ -9,8 +9,8 @@ from .models import (
     FlowSimulationResult,
     FluidProperties,
 )
-from .service import CardiFlowService, ReadinessError
 from .reduced_order import Windkessel3ElementBackend
+from .service import CardiFlowService, ReadinessError
 
 __all__ = [
     "ArtifactRef",
