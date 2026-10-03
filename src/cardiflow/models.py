@@ -118,6 +118,7 @@ class FlowSimulationResult(BaseModel):
     backend: str
     outputs: list[ArtifactRef] = Field(default_factory=list)
     scalar_outputs: dict[str, float] = Field(default_factory=dict)
+    series_outputs: dict[str, list[float]] = Field(default_factory=dict)
     qc: FlowQC | None = None
     validation_status: Literal[
         "unvalidated",

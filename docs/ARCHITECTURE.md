@@ -40,3 +40,13 @@ Potential backend families include reduced-order flow, finite-volume/finite-elem
 6. External patient/cohort validation.
 
 Mass conservation and solver convergence are necessary quality checks, not evidence of clinical validity.
+
+
+## Built-in reduced-order reference backend
+
+`windkessel-3element-v1` implements a three-element Windkessel afterload with
+proximal resistance, distal resistance and compliance. For piecewise-constant
+inlet-flow samples it advances capacitor pressure using the exact RC solution,
+reports waveform/scalar outputs, and fails QC if the conservation residual
+exceeds tolerance. Its validation status is `software_checked`; it is not a CFD
+backend and does not establish physiological or clinical validity.

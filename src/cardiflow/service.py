@@ -11,6 +11,9 @@ class ReadinessError(RuntimeError):
 class CardiFlowService:
     def __init__(self) -> None:
         self._backends: dict[str, FlowBackend] = {}
+        from .reduced_order import Windkessel3ElementBackend
+
+        self.register_backend(Windkessel3ElementBackend())
 
     def register_backend(self, backend: FlowBackend) -> None:
         self._backends[backend.name] = backend

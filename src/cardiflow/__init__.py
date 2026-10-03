@@ -10,6 +10,7 @@ from .models import (
     FluidProperties,
 )
 from .service import CardiFlowService, ReadinessError
+from .reduced_order import Windkessel3ElementBackend
 
 __all__ = [
     "ArtifactRef",
@@ -21,6 +22,7 @@ __all__ = [
     "FlowSimulationResult",
     "FluidProperties",
     "ReadinessError",
+    "Windkessel3ElementBackend",
 ]
 
 __version__ = "0.1.0"

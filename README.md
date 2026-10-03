@@ -16,7 +16,7 @@ CardiFlow owns:
 - conservation and numerical-quality checks;
 - calibration-ready outputs for CardiInfer.
 
-CardiFlow does **not** run a placeholder CFD model. Missing numerical backends fail closed.
+CardiFlow does **not** run a placeholder CFD model. It includes a deterministic `windkessel-3element-v1` reduced-order 0D afterload backend for software integration and calibration plumbing; this is not CFD and is not patient-specific physiological validation. Unsupported numerical backends fail closed.
 
 ## Quick start
 
