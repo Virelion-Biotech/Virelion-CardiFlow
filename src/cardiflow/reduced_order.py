@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import math
+from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 from .backends import BackendUnavailable
-from .models import FlowQC, FlowSimulationRequest, FlowSimulationResult
+from .models import ArtifactRef, FlowQC, FlowSimulationRequest, FlowSimulationResult
 
 
 class Windkessel3ElementBackend:
@@ -13,6 +17,10 @@ class Windkessel3ElementBackend:
     This is a reduced-order 0D reference backend, not a CFD solver. The distal
     capacitor pressure is advanced with the exact solution for piecewise-constant
     inlet flow over each time step.
+
+    The backend can consume the mechanics_timeseries artifact emitted by
+    CardiMech and use aortic_flow_ml_s as its inlet waveform. That makes the
+    built-in reference path a real Mechanics-to-Flow handoff.
     """
 
     name = "windkessel-3element-v1"
@@ -26,6 +34,56 @@ class Windkessel3ElementBackend:
         if not math.isfinite(number) or number <= 0:
             raise ValueError(f"{name} must be finite and > 0")
         return number
+
+    @staticmethod
+    def _local_path(ref: ArtifactRef) -> Path:
+        parsed = urlparse(ref.uri)
+        if parsed.scheme not in {"", "file"}:
+            raise ValueError(
+                "windkessel-3element-v1 requires local/file mechanics artifacts"
+            )
+        raw = unquote(parsed.path) if parsed.scheme == "file" else ref.uri
+        return Path(raw).expanduser().resolve()
+
+    @classmethod
+    def _mechanics_inlet(cls, ref: ArtifactRef) -> tuple[list[float], float]:
+        path = cls._local_path(ref)
+        if not path.is_file():
+            raise FileNotFoundError(f"Mechanics artifact does not exist: {path}")
+        if ref.sha256 is not None:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if digest.lower() != ref.sha256.lower():
+                raise ValueError("Mechanics artifact SHA-256 verification failed")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise TypeError("Mechanics timeseries artifact must contain a JSON object")
+
+        raw_flow = payload.get("aortic_flow_ml_s")
+        raw_time = payload.get("time_s")
+        if not isinstance(raw_flow, list) or len(raw_flow) < 2:
+            raise ValueError(
+                "Mechanics artifact requires at least two aortic_flow_ml_s samples"
+            )
+        if not isinstance(raw_time, list) or len(raw_time) != len(raw_flow):
+            raise ValueError(
+                "Mechanics artifact requires time_s aligned with aortic_flow_ml_s"
+            )
+
+        flow = [float(value) for value in raw_flow]
+        time = [float(value) for value in raw_time]
+        if not all(math.isfinite(value) for value in flow + time):
+            raise ValueError("Mechanics coupling artifact contains non-finite values")
+
+        deltas = [right - left for left, right in zip(time, time[1:])]
+        if not deltas or any(delta <= 0 or not math.isfinite(delta) for delta in deltas):
+            raise ValueError("Mechanics time_s must be strictly increasing")
+        dt_s = sum(deltas) / len(deltas)
+        tolerance = max(1e-9, abs(dt_s) * 1e-6)
+        if any(abs(delta - dt_s) > tolerance for delta in deltas):
+            raise ValueError(
+                "windkessel-3element-v1 requires a uniformly sampled mechanics waveform"
+            )
+        return flow, dt_s
 
     def simulate(self, request: FlowSimulationRequest) -> FlowSimulationResult:
         windkessels = [
@@ -45,14 +103,40 @@ class Windkessel3ElementBackend:
         )
         compliance = self._finite_positive(params.get("compliance"), "compliance")
 
-        raw_flow = request.settings.get("inlet_flow")
-        if not isinstance(raw_flow, list) or len(raw_flow) < 2:
-            raise ValueError("settings.inlet_flow must contain at least two samples")
-        flow = [float(value) for value in raw_flow]
-        if not all(math.isfinite(value) for value in flow):
-            raise ValueError("settings.inlet_flow contains non-finite values")
+        explicit_flow = request.settings.get("inlet_flow")
+        if explicit_flow is not None and request.mechanics_ref is not None:
+            raise ValueError(
+                "Provide either settings.inlet_flow or mechanics_ref, not both; "
+                "the backend refuses to silently bypass a declared mechanics coupling"
+            )
 
-        dt_s = self._finite_positive(request.settings.get("dt_s"), "settings.dt_s")
+        coupling_mode = "explicit_inlet_flow"
+        mechanics_artifact_id = None
+        if request.mechanics_ref is not None:
+            flow, mechanics_dt_s = self._mechanics_inlet(request.mechanics_ref)
+            raw_dt = request.settings.get("dt_s")
+            if raw_dt is None:
+                dt_s = mechanics_dt_s
+            else:
+                dt_s = self._finite_positive(raw_dt, "settings.dt_s")
+                tolerance = max(1e-9, abs(mechanics_dt_s) * 1e-6)
+                if abs(dt_s - mechanics_dt_s) > tolerance:
+                    raise ValueError(
+                        "settings.dt_s disagrees with the mechanics artifact sampling interval"
+                    )
+            coupling_mode = "mechanics_aortic_flow"
+            mechanics_artifact_id = request.mechanics_ref.artifact_id
+        else:
+            if not isinstance(explicit_flow, list) or len(explicit_flow) < 2:
+                raise ValueError(
+                    "Provide settings.inlet_flow with at least two samples or a mechanics_ref"
+                )
+            flow = [float(value) for value in explicit_flow]
+            dt_s = self._finite_positive(request.settings.get("dt_s"), "settings.dt_s")
+
+        if not all(math.isfinite(value) for value in flow):
+            raise ValueError("Inlet flow contains non-finite values")
+
         tau_s = rd * compliance
         decay = math.exp(-dt_s / tau_s)
 
@@ -119,6 +203,9 @@ class Windkessel3ElementBackend:
                 "model": "three-element Windkessel",
                 "integration": "exact piecewise-constant RC update",
                 "boundary_id": boundary.boundary_id,
+                "coupling_mode": coupling_mode,
+                "mechanics_artifact_id": mechanics_artifact_id,
+                "moving_wall_consumed": False,
                 "scientific_scope": (
                     "reduced-order afterload reference; not CFD and not "
                     "patient-specific physiological validation"
