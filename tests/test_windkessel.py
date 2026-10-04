@@ -1,3 +1,5 @@
+import hashlib
+import json
 import math
 
 import pytest
@@ -70,4 +72,54 @@ def test_windkessel_rejects_invalid_parameterization():
     request = _request()
     request.boundary_conditions[0].parameters["compliance"] = 0.0
     with pytest.raises(ValueError, match="compliance"):
+        CardiFlowService().simulate(request)
+
+
+def test_windkessel_consumes_verified_cardimech_aortic_flow(tmp_path):
+    mechanics = tmp_path / "mechanics.json"
+    mechanics.write_text(
+        json.dumps(
+            {
+                "time_s": [0.0, 0.01, 0.02, 0.03],
+                "aortic_flow_ml_s": [1.0, 2.0, 3.0, 2.0],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    digest = hashlib.sha256(mechanics.read_bytes()).hexdigest()
+
+    request = _request()
+    request.settings = {}
+    request.mechanics_ref = ArtifactRef(
+        artifact_id="mechanics-timeseries",
+        kind="mechanics_timeseries",
+        uri=mechanics.resolve().as_uri(),
+        sha256=digest,
+    )
+    result = CardiFlowService().simulate(request)
+    assert result.series_outputs["inlet_flow"] == [1.0, 2.0, 3.0, 2.0]
+    assert result.provenance["coupling_mode"] == "mechanics_aortic_flow"
+    assert result.provenance["mechanics_artifact_id"] == "mechanics-timeseries"
+
+
+def test_windkessel_refuses_to_bypass_declared_mechanics_coupling(tmp_path):
+    mechanics = tmp_path / "mechanics.json"
+    mechanics.write_text(
+        json.dumps(
+            {
+                "time_s": [0.0, 0.01],
+                "aortic_flow_ml_s": [1.0, 1.0],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    request = _request()
+    request.mechanics_ref = ArtifactRef(
+        artifact_id="mechanics-timeseries",
+        kind="mechanics_timeseries",
+        uri=mechanics.resolve().as_uri(),
+    )
+    with pytest.raises(ValueError, match="either settings.inlet_flow or mechanics_ref"):
         CardiFlowService().simulate(request)
