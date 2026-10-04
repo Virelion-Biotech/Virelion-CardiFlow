@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
@@ -74,7 +75,7 @@ class Windkessel3ElementBackend:
         if not all(math.isfinite(value) for value in flow + time):
             raise ValueError("Mechanics coupling artifact contains non-finite values")
 
-        deltas = [right - left for left, right in zip(time, time[1:])]
+        deltas = [right - left for left, right in pairwise(time)]
         if not deltas or any(delta <= 0 or not math.isfinite(delta) for delta in deltas):
             raise ValueError("Mechanics time_s must be strictly increasing")
         dt_s = sum(deltas) / len(deltas)
