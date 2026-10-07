@@ -1,0 +1,75 @@
+{
+  "cfd_validation": false,
+  "clinical_validation": false,
+  "empirical_validation": false,
+  "manufactured": {
+    "checks": {
+      "constant_flow_exact": true,
+      "deterministic": true,
+      "first_order_smooth_waveform_refinement": true,
+      "integrated_volume_balance": true,
+      "terminal_time_alignment": true,
+      "tiny_step_stability": true,
+      "zero_flow_decay_exact": true
+    },
+    "harmonic_refinement": [
+      {
+        "dt_s": 0.05,
+        "rmse_mmHg": 0.3488215564949125,
+        "samples_per_period": 20
+      },
+      {
+        "dt_s": 0.025,
+        "rmse_mmHg": 0.174582170646347,
+        "samples_per_period": 40
+      },
+      {
+        "dt_s": 0.0125,
+        "rmse_mmHg": 0.08737719030194875,
+        "samples_per_period": 80
+      },
+      {
+        "dt_s": 0.00625,
+        "rmse_mmHg": 0.043715583475303285,
+        "samples_per_period": 160
+      }
+    ],
+    "metrics": {
+      "constant_flow_max_error_mmHg": 8.881784197001252e-16,
+      "global_volume_balance_error_mL": 0.0,
+      "tiny_step_relative_error": 0.0,
+      "zero_flow_max_error_mmHg": 1.7763568394002505e-15
+    },
+    "observed_orders": [
+      0.9985829685981419,
+      0.9985776096375497,
+      0.9991090603785633
+    ],
+    "passed": true,
+    "schema_version": "cardiflow-cpu-validation-v1",
+    "scientific_boundary": "Manufactured 0D numerical verification; no CFD, measured-data or clinical validation."
+  },
+  "numpy": "2.3.5",
+  "passed": true,
+  "python": "3.12.14",
+  "scipy": "1.17.0",
+  "synthetic_inverse": {
+    "jacobian_condition_number": 13.58698271006728,
+    "max_relative_parameter_error": 1.734723475976807e-16,
+    "optimizer_success": true,
+    "passed": true,
+    "pressure_rmse_mmHg": 1.6102389602765698e-15,
+    "recovered": {
+      "compliance": 1.7,
+      "distal_resistance": 1.1,
+      "proximal_resistance": 0.08000000000000002
+    },
+    "scope": "Known initial and distal pressures; noiseless same-model observations. Not real-data identifiability or empirical validation.",
+    "truth": {
+      "compliance": 1.7,
+      "distal_resistance": 1.1,
+      "proximal_resistance": 0.08
+    }
+  },
+  "version": "0.2.0"
+}

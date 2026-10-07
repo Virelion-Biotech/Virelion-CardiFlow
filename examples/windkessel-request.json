@@ -1,0 +1,61 @@
+{
+  "subject_id": "manufactured",
+  "domain": {
+    "domain_id": "0d",
+    "anatomy_ref": {
+      "artifact_id": "manufactured-domain",
+      "kind": "reduced_order_domain",
+      "uri": "memory://0d",
+      "sha256": null,
+      "coordinate_frame": null,
+      "metadata": {}
+    },
+    "region": "afterload",
+    "mesh_ref": null,
+    "moving_wall_ref": null
+  },
+  "backend": "windkessel-3element-v1",
+  "fluid": {
+    "density": 1060.0,
+    "dynamic_viscosity": 0.0035,
+    "density_unit": "kg/m^3",
+    "viscosity_unit": "Pa*s",
+    "model": "newtonian",
+    "parameters": {}
+  },
+  "boundary_conditions": [
+    {
+      "boundary_id": "afterload",
+      "kind": "windkessel",
+      "region": "aorta",
+      "value": null,
+      "unit": null,
+      "waveform_ref": null,
+      "parameters": {
+        "proximal_resistance": 0.08,
+        "distal_resistance": 1.1,
+        "compliance": 1.7,
+        "distal_pressure_mmHg": 4.0
+      }
+    }
+  ],
+  "mechanics_ref": null,
+  "circulation_ref": null,
+  "settings": {
+    "inlet_flow": [
+      0,
+      30,
+      80,
+      120,
+      70,
+      20,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "dt_s": 0.1,
+    "initial_capacitor_pressure": 80
+  }
+}

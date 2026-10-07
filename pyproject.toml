@@ -1,13 +1,14 @@
 [project]
 name = "virelion-cardiflow"
-version = "0.1.0"
+version = "0.2.0"
 description = "Cardiac hemodynamics, reduced-order flow, and CFD orchestration for Virelion HeartTwin"
 requires-python = ">=3.10"
 license = {text = "AGPL-3.0-or-later"}
 dependencies = ["pydantic>=2.6,<3"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.6"]
+reference = ["scipy>=1.11,<2", "numpy>=1.26,<3"]
 
 [project.scripts]
 cardiflow = "cardiflow.cli:main"

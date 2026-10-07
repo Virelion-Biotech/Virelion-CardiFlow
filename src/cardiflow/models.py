@@ -6,28 +6,28 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class ArtifactRef(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
-    artifact_id: str
-    kind: str
-    uri: str
-    sha256: str | None = Field(default=None, min_length=64, max_length=64)
+    artifact_id: str = Field(min_length=1)
+    kind: str = Field(min_length=1)
+    uri: str = Field(min_length=1)
+    sha256: str | None = Field(default=None, pattern=r"^[0-9a-fA-F]{64}$")
     coordinate_frame: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class FlowDomain(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
-    domain_id: str
+    domain_id: str = Field(min_length=1)
     anatomy_ref: ArtifactRef
-    region: str
+    region: str = Field(min_length=1)
     mesh_ref: ArtifactRef | None = None
     moving_wall_ref: ArtifactRef | None = None
 
 
 class FluidProperties(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
     density: float = Field(gt=0)
     dynamic_viscosity: float = Field(gt=0)
@@ -38,9 +38,9 @@ class FluidProperties(BaseModel):
 
 
 class FlowBoundaryCondition(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
-    boundary_id: str
+    boundary_id: str = Field(min_length=1)
     kind: Literal[
         "velocity",
         "flow_rate",
@@ -51,7 +51,7 @@ class FlowBoundaryCondition(BaseModel):
         "moving_wall",
         "custom",
     ]
-    region: str
+    region: str = Field(min_length=1)
     value: float | None = None
     unit: str | None = None
     waveform_ref: ArtifactRef | None = None
@@ -70,7 +70,7 @@ class FlowBoundaryCondition(BaseModel):
 
 
 class FlowQC(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
     passed: bool
     converged: bool | None = None
@@ -92,11 +92,11 @@ class FlowQC(BaseModel):
 
 
 class FlowSimulationRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
-    subject_id: str
+    subject_id: str = Field(min_length=1)
     domain: FlowDomain
-    backend: str
+    backend: str = Field(min_length=1)
     fluid: FluidProperties
     boundary_conditions: list[FlowBoundaryCondition]
     mechanics_ref: ArtifactRef | None = None
@@ -107,18 +107,22 @@ class FlowSimulationRequest(BaseModel):
     def require_boundaries(self) -> FlowSimulationRequest:
         if not self.boundary_conditions:
             raise ValueError("At least one flow boundary condition is required")
+        ids = [item.boundary_id for item in self.boundary_conditions]
+        if len(ids) != len(set(ids)):
+            raise ValueError("Boundary IDs must be unique")
         return self
 
 
 class FlowSimulationResult(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, str_strip_whitespace=True)
 
     contract_version: str = "1.0"
-    subject_id: str
-    backend: str
+    subject_id: str = Field(min_length=1)
+    backend: str = Field(min_length=1)
     outputs: list[ArtifactRef] = Field(default_factory=list)
     scalar_outputs: dict[str, float] = Field(default_factory=dict)
     series_outputs: dict[str, list[float]] = Field(default_factory=dict)
+    units: dict[str, str] = Field(default_factory=dict)
     qc: FlowQC | None = None
     validation_status: Literal[
         "unvalidated",
@@ -127,3 +131,9 @@ class FlowSimulationResult(BaseModel):
         "empirically_checked",
     ] = "unvalidated"
     provenance: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def checked_status_requires_qc(self) -> FlowSimulationResult:
+        if self.validation_status != "unvalidated" and (self.qc is None or not self.qc.passed):
+            raise ValueError("Checked validation status requires passing QC")
+        return self
