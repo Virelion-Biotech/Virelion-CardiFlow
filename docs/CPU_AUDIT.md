@@ -30,4 +30,4 @@ Local verification: **71 tests passed**, **96.24% statement coverage**, source l
 
 The exact [numerical contract and limits](SCIENTIFIC_VALIDATION.md) must accompany scientific use. There is no CFD, experimental or clinical validation claim.
 
-Publication provenance: pending publication.
+Publication provenance: implementation and CPU evidence committed as `4e7bb8f96bad3cde0cb5ff40cc886e3d4025bb34`. CI reproduces manufactured and inverse checks, independent SciPy references, and wheel behavior; the core matrix spans Python 3.10–3.14 on Linux and Python 3.12 on Windows, with a 90% coverage floor.
