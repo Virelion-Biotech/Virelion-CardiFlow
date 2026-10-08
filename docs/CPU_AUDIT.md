@@ -1,5 +1,7 @@
 # CardiFlow 0.2.0 CPU audit
 
+Historical 0D audit; the spatial extension is documented in [SPATIAL_REFERENCE.md](SPATIAL_REFERENCE.md).
+
 Audited 2026-10-07 from main `f1965c895bc4167590f25095102b94419c5a953c`. The baseline had nine passing tests. Nine new regression cases failed before fixes: endpoint advancement, tiny-step cancellation, ignored/incompatible settings, nonfinite typed outputs/fluid density, and underflow/overflow of the RC time constant.
 
 ## Numerical evidence
@@ -16,7 +18,7 @@ Audited 2026-10-07 from main `f1965c895bc4167590f25095102b94419c5a953c`. The bas
 
 Results and environment versions are committed in [results.json](../validation/cpu/results.json). CI regenerates the report from code. No GPU is required.
 
-Local verification: **71 tests passed**, **96.24% statement coverage**, source lint passed, and the built wheel passed reference validation outside the source checkout. The package dependency check passed. Core-only CI skips sixteen optional SciPy reference cases; a dedicated job installs reference dependencies.
+Local verification: **71 tests passed**, **96.24% statement coverage**, source lint passed, and the built wheel passed reference validation outside the source checkout. The package dependency check passed. At the time of this audit, core-only CI skipped sixteen optional SciPy reference cases; the 0.3.0 test matrix now installs spatial dependencies and checks both backends.
 
 ## Product corrections
 

@@ -7,7 +7,12 @@ from .service import CardiFlowService
 
 
 class FlowAPI:
-    capabilities = ("flow.health", "flow.simulate", "flow.validate.reference")
+    capabilities = (
+        "flow.health",
+        "flow.simulate",
+        "flow.validate.reference",
+        "flow.validate.spatial",
+    )
 
     def __init__(self, service: CardiFlowService | None = None) -> None:
         self.service = service or CardiFlowService()
@@ -34,3 +39,8 @@ class FlowAPI:
         from .validation import run_reference_validation
 
         return run_reference_validation()
+
+    def validate_spatial(self) -> dict[str, Any]:
+        from .spatial_validation import run_spatial_validation
+
+        return run_spatial_validation()

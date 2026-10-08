@@ -224,7 +224,10 @@ def test_health_reports_unavailable_backends(raises):
             return False
 
     service = CardiFlowService()
-    service.register_backend(Unavailable(), replace=True)
+    for name in service.backends():
+        backend = Unavailable()
+        backend.name = name
+        service.register_backend(backend, replace=True)
     health = FlowAPI(service).health()
     assert health["status"] == "degraded"
     assert not health["backend_status"][0]["available"]

@@ -2,7 +2,7 @@
 
 ## Model and units
 
-The only built-in solver is `windkessel-3element-v1`, a zero-dimensional three-element afterload. It solves
+The 0D built-in solver is `windkessel-3element-v1`, a zero-dimensional three-element afterload. It solves
 
 $$C\,\frac{dP_c}{dt}=Q-\frac{P_c-P_d}{R_d},\qquad P_{out}=P_c+R_pQ.$$
 
@@ -39,4 +39,8 @@ Verification includes steady/transient analytic solutions, zero-flow decay, tiny
 
 ## Limits
 
-These are manufactured and synthetic numerical checks. They do not validate blood velocity fields, wall shear stress, spatial geometry, Navier–Stokes discretization, turbulence, fluid-structure interaction, patient-specific accuracy, measured-data parameter identifiability, noise robustness or clinical outcomes. No built-in CFD solver or measured validation dataset is present. The synthetic inverse experiment uses the same model for truth and fitting; it cannot establish empirical accuracy. The observed first-order waveform error comes from zero-order-hold input approximation despite exact integration of each held interval.
+These are manufactured and synthetic numerical checks. They do not validate blood velocity fields, wall shear stress, spatial geometry, Navier–Stokes discretization, turbulence, fluid-structure interaction, patient-specific accuracy, measured-data parameter identifiability, noise robustness or clinical outcomes. These 0D checks do not assess the separate spatial backend. Version 0.3.0 adds independent spatial numerical verification in [the spatial contract](SPATIAL_REFERENCE.md); no measured validation dataset is present. The synthetic inverse experiment uses the same model for truth and fitting; it cannot establish empirical accuracy. The observed first-order waveform error comes from zero-order-hold input approximation despite exact integration of each held interval.
+
+## Spatial numerical verification
+
+The optional rigid-pipe backend has its own [equations, units, boundary contract, benchmarks and limitations](SPATIAL_REFERENCE.md). Its spatial numerical report is [spatial-results.json](../validation/cpu/spatial-results.json). The 0D report above is retained as historical 0.2.0 evidence.

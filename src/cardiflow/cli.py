@@ -16,6 +16,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("doctor", help="Report package and registered backends")
     sub.add_parser("validate-reference", help="Run CPU manufactured numerical checks")
+    sub.add_parser("validate-spatial", help="Run analytical CPU pipe-flow benchmarks")
     simulate = sub.add_parser("simulate", help="Run a typed JSON simulation request")
     simulate.add_argument("request", type=Path)
     simulate.add_argument("--output", type=Path, help="Atomically write result JSON")
@@ -26,6 +27,8 @@ def main() -> int:
             result = api.health()
         elif args.command == "validate-reference":
             result = api.validate_reference()
+        elif args.command == "validate-spatial":
+            result = api.validate_spatial()
         else:
             result = api.simulate(json.loads(args.request.read_text(encoding="utf-8")))
         serialized = json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n"

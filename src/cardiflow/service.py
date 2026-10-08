@@ -14,6 +14,9 @@ class CardiFlowService:
         from .reduced_order import Windkessel3ElementBackend
 
         self.register_backend(Windkessel3ElementBackend())
+        from .pipe_flow import RigidPipeBackend
+
+        self.register_backend(RigidPipeBackend())
 
     def register_backend(self, backend: FlowBackend, *, replace: bool = False) -> None:
         if not isinstance(backend.name, str) or not backend.name.strip():
