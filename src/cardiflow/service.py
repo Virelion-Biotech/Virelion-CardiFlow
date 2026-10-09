@@ -45,6 +45,7 @@ class CardiFlowService:
         return backend
 
     def simulate(self, request: FlowSimulationRequest) -> FlowSimulationResult:
+        request = FlowSimulationRequest.model_validate(request.model_dump(mode="python"))
         result = self._backend(request.backend).simulate(request)
         if not isinstance(result, FlowSimulationResult):
             raise ReadinessError("Backend must return a FlowSimulationResult")
@@ -55,6 +56,9 @@ class CardiFlowService:
             raise ReadinessError("Backend result identifier does not match request backend")
         if result.qc is None or not result.qc.passed:
             raise ReadinessError("Flow result is missing QC or failed QC")
+        from .eligibility import check_biomarker_eligibility
+
+        check_biomarker_eligibility(result)
 
         expected = {"domain_id": request.domain.domain_id}
         references = {
