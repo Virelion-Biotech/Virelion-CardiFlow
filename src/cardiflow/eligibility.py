@@ -1,12 +1,13 @@
 """Solver-specific biomarker boundaries; solver QC alone does not validate physiology."""
 
 from __future__ import annotations
+
 import re
 
 # Explicit restriction to the numerically tested reference pipe implementation.
 _PIPE = {"wall_shear_pa", "time_averaged_wall_shear_pa", "oscillatory_shear_index"}
 _SPATIAL = re.compile(
-    r"wss|shear|vortex|vorticity|washout|residence|flow_efficiency|kinetic_energy|energy_loss", re.I
+    r"wss|shear|vortex|vorticity|washout|residence|flow_efficiency|kinetic_energy|energy_loss", re.IGNORECASE
 )
 
 
