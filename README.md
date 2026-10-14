@@ -4,6 +4,21 @@ Hemodynamics and flow-simulation layer for the Virelion HeartTwin stack.
 
 CardiFlow defines contracts for chamber/vascular flow domains, fluid properties, inlet/outlet/wall boundary conditions, reduced-order and CFD backends, coupling to CardiMech and circulation models, flow-derived biomarkers, solver QC, and HeartTwin integration.
 
+
+<!-- VALIDATION_PRODUCT_STATUS:BEGIN -->
+## Validation and product completion status
+
+**Reviewed 2026-10-14; implementation base `75c22fad2059`.** **Status: 0D and restricted spatial numerical evidence; patient-flow qualification incomplete.** This is an evidence-backed scope assessment, not a percentage-complete estimate or a declaration that the product is finished.
+
+| Area | Current evidence / remaining gate |
+|---|---|
+| Software / operational checks | Automated test sources and CI definitions are present; this documentation audit does not report a new algorithm/data-validation run. |
+| Scientific or domain evidence | Both Windkessel afterload and rigid-pipe pulsatile flow are executable. The spatial reference is a straight rigid Newtonian tube, with independent Poiseuille/Womersley checks; it is not generic patient-anatomy CFD or FSI. |
+| Remaining for the declared product scope | For the broader flow product, implement/qualify anatomical boundary labeling, 3D/branched flow, moving-wall and 0D–spatial coupling with mesh-field artifacts; demonstrate convergence and measured-flow agreement; propagate uncertainty and qualify intended-scale execution. |
+
+Evidence and limits: [repository report](docs/SPATIAL_REFERENCE.md). The [organization status index](https://github.com/Virelion-Biotech/Virelion-HeartTwin/blob/main/docs/STACK_VALIDATION_STATUS.md) separates software, numerical, data-readiness and empirical qualification. Code/schema execution or a completed download is not a substitute for endpoint-specific validation.
+<!-- VALIDATION_PRODUCT_STATUS:END -->
+
 ## Scope
 
 CardiFlow owns:
