@@ -1,0 +1,42 @@
+{
+  "original_archive_sha256": "2b1de060df67199e050889df0b611e463e8ff47d074a718afe9b11d3c8d40a9c",
+  "source_commit": "75c22fad2059293557bd6eb73c3c45bb16bfa6f8",
+  "status": "NUMERICAL_ONLY",
+  "runtime_seconds": 1.8165130790000035,
+  "archive_members": 21,
+  "artifact_hashes_verified": 20,
+  "canonical_protocol_and_launcher_hashes_verified": true,
+  "pinned_snapshot_files_verified": 38,
+  "current_implementation_files_match_run": 14,
+  "empirical_validation": false,
+  "clinical_validation": false,
+  "reproduced_reports": [
+    {
+      "original": "Virelion-CardiFlow-run_cpu_validation.json",
+      "reproduction": "cpu-reproduction.json"
+    },
+    {
+      "original": "Virelion-CardiFlow-run_spatial_validation.json",
+      "reproduction": "spatial-reproduction.json"
+    }
+  ],
+  "comparison_relative_tolerance": 1e-07,
+  "comparison_absolute_tolerance": 1e-10,
+  "comparison_excludes": [
+    "python",
+    "numpy",
+    "scipy",
+    "environment"
+  ],
+  "algorithm_changes": false,
+  "decision": "No demonstrated algorithmic defect in this numerical export; retain original algorithms and report remaining scientific limits.",
+  "local_tests_passed": 102,
+  "local_optional_tests_skipped": 0,
+  "statement_coverage_percent": 97.13,
+  "scientific_limits": [
+    "- The spatial backend is a fully developed, axisymmetric, rigid straight-pipe reduction. These analytical controls are not general patient-specific 3D CFD or moving-wall/valve/FSI validation.",
+    "- The Womersley radial study refines both radial cells and time steps, so it does not isolate spatial order. The separate temporal study fixes 256 cells and reduces profile error, but wall-shear error nearly plateaus at 0.362%; finer time steps alone do not establish wall-shear convergence.",
+    "- Separate radial/time refinements and a boundary-flux error study could strengthen wall-shear verification. Changing only the shear output would risk inconsistency with the discrete momentum balance; this export does not demonstrate a defect warranting that change.",
+    "- RCR inverse recovery uses known initial/distal pressures and noiseless same-model observations. Independent pressure/flow data, physiological identifiability and 4D-flow/3D solver comparisons remain absent."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/content/15_CardiFlow_Numerical_v1/venv/bin/python",
+    "/content/15_CardiFlow_Numerical_v1/Virelion-CardiFlow/scripts/run_cpu_validation.py",
+    "--output",
+    "/content/drive/MyDrive/HeartTwinValidation/15_CardiFlow_Numerical_v1/results/Virelion-CardiFlow-run_cpu_validation.json"
+  ],
+  "returncode": 0,
+  "seconds": 0.7036697179999862
+}

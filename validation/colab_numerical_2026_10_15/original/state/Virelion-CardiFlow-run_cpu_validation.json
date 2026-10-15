@@ -1,0 +1,12 @@
+{
+  "artifacts": {
+    "logs/Virelion-CardiFlow-run_cpu_validation.txt": "d8f562722b44ea2900aebb4dea553ef7c76ac238e78dc0f5451712d29a542976",
+    "results/Virelion-CardiFlow-run_cpu_validation-execution.json": "08929408a87ff4c1159e81ae9d496251fbfcbcd1ca886e46643d7331c34263ed",
+    "results/Virelion-CardiFlow-run_cpu_validation.json": "0e53eeb41bd1a1f96dceea726ad4cb5f6969e97fb0a546d1ff651f5506c196e3"
+  },
+  "identity": "54ff909dd4af3b9ee04e168759d0de8d9ff119c9e4bdb53b1d19d5c197eceeb6",
+  "result": {
+    "log": "logs/Virelion-CardiFlow-run_cpu_validation.txt",
+    "returncode": 0
+  }
+}

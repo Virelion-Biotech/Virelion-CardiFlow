@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/content/15_CardiFlow_Numerical_v1/venv/bin/python",
+    "/content/15_CardiFlow_Numerical_v1/Virelion-CardiFlow/scripts/run_spatial_validation.py",
+    "--output",
+    "/content/drive/MyDrive/HeartTwinValidation/15_CardiFlow_Numerical_v1/results/Virelion-CardiFlow-run_spatial_validation.json"
+  ],
+  "returncode": 0,
+  "seconds": 1.0207910100000106
+}

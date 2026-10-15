@@ -1,0 +1,12 @@
+{
+  "error": null,
+  "input_receipts": {},
+  "protocol_sha256": "54ff909dd4af3b9ee04e168759d0de8d9ff119c9e4bdb53b1d19d5c197eceeb6",
+  "scientific_validation": "NOT_ESTABLISHED_BY_EXECUTION",
+  "scope": "Poiseuille and Womersley analytic verification plus RCR numerical controls.",
+  "seconds_this_session": 1.8165130790000035,
+  "source_pins": {
+    "Virelion-CardiFlow": "75c22fad2059293557bd6eb73c3c45bb16bfa6f8"
+  },
+  "status": "NUMERICAL_ONLY"
+}
