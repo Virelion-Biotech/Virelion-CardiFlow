@@ -1,0 +1,12 @@
+{
+  "artifacts": {
+    "logs/Virelion-CardiFlow-run_spatial_validation.txt": "43a9bb8ad823ad173da0c5baee519cda3014b8c9369fe1dc64fd323179b4d166",
+    "results/Virelion-CardiFlow-run_spatial_validation-execution.json": "defb2bc25b061c2e99aa91356da07e9fffd9e03249df66f50d945d1b019d953b",
+    "results/Virelion-CardiFlow-run_spatial_validation.json": "b296d861cb73a6684ca06e933b4decdf683862be798901e8df060c355a528f40"
+  },
+  "identity": "54ff909dd4af3b9ee04e168759d0de8d9ff119c9e4bdb53b1d19d5c197eceeb6",
+  "result": {
+    "log": "logs/Virelion-CardiFlow-run_spatial_validation.txt",
+    "returncode": 0
+  }
+}

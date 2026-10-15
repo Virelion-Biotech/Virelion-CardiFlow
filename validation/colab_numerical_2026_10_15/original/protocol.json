@@ -1,0 +1,70 @@
+{
+  "environment_sha256": "4b5949a9121131c8c351b5564f804971cca1dd63d0e4ddfdeb2768246f7cd73e",
+  "fitness": "FIT for the named analytical/numerical checks only.",
+  "handler": "numerical",
+  "jobs": {
+    "Virelion-CardiFlow": [
+      [
+        "scripts/run_spatial_validation.py",
+        [
+          "--output",
+          "OUTPUT"
+        ]
+      ],
+      [
+        "scripts/run_cpu_validation.py",
+        [
+          "--output",
+          "OUTPUT"
+        ]
+      ]
+    ]
+  },
+  "launcher_sha256": {
+    "runtime.py": "42099bbb908333a480c11eca9f0586759d57162a1c11b977067a9696c45d0985",
+    "training.py": "c63aee5893f194932f786c5054bd5ff5938bde40a69328d43fd39fb8b0faf112",
+    "worker.py": "76a8b3ddbe6411bea07d353948f7bed3a708ddd3dd46624e6569c377b3eb88b3"
+  },
+  "limits": "Not a patient 3D Navier\u2013Stokes/4D-flow/pressure validation.",
+  "name": "15_CardiFlow_Numerical",
+  "repo_paths": {
+    "Virelion-CardiFlow": "/content/15_CardiFlow_Numerical_v1/Virelion-CardiFlow"
+  },
+  "repos": {
+    "Virelion-CardiFlow": "75c22fad2059293557bd6eb73c3c45bb16bfa6f8"
+  },
+  "requirements": [
+    "numba==0.61.2",
+    "llvmlite==0.44.0",
+    "numpy==2.2.6",
+    "scipy==1.15.3",
+    "pandas==2.2.3",
+    "scikit-learn==1.6.1",
+    "pydantic==2.11.7",
+    "pyyaml==6.0.2",
+    "requests==2.32.4",
+    "matplotlib==3.10.1",
+    "seaborn==0.13.2",
+    "click==8.1.8",
+    "jinja2==3.1.6",
+    "opencv-python-headless==4.12.0.88",
+    "tifffile==2025.6.11",
+    "pillow==11.3.0",
+    "defusedxml==0.7.1",
+    "openpyxl==3.1.5",
+    "meshio==5.3.5",
+    "nibabel==5.3.2",
+    "pydicom==3.0.1",
+    "arviz==0.21.0",
+    "xarray==2025.3.1",
+    "wfdb==4.2.0",
+    "jsonschema==4.24.0"
+  ],
+  "run_root": "/content/drive/MyDrive/HeartTwinValidation/15_CardiFlow_Numerical_v1",
+  "scope": "Poiseuille and Womersley analytic verification plus RCR numerical controls.",
+  "session_seconds": 8100,
+  "source_archive_sha256": {
+    "Virelion-CardiFlow": "d5352c96054ff4c29737ff9951c7d14cc9f584af6d8846f3f81f7ccc2273c08e"
+  },
+  "title": "CardiFlow numerical verification"
+}
