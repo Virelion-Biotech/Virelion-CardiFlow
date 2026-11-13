@@ -1,0 +1,6 @@
+# Exact false-positive fingerprints: 64-character SHA-256 hashes in saved validation manifests/results, not credentials.
+6ac2c4c85cc92b75756f0e6917cf3b10a54844f2:validation/colab_numerical_2026_10_15/original/logs/Virelion-CardiFlow-run_spatial_validation.txt:generic-api-key:44
+6ac2c4c85cc92b75756f0e6917cf3b10a54844f2:validation/colab_numerical_2026_10_15/original/results/Virelion-CardiFlow-run_spatial_validation.json:generic-api-key:43
+6ac2c4c85cc92b75756f0e6917cf3b10a54844f2:validation/colab_numerical_2026_10_15/spatial-reproduction.json:generic-api-key:43
+6ac2c4c85cc92b75756f0e6917cf3b10a54844f2:validation/colab_numerical_2026_10_15/original/source_snapshots.json:generic-api-key:24
+259b83ea895aaa507348c2c93a66adf2b3783d2c:validation/cpu/spatial-results.json:generic-api-key:43
