@@ -71,7 +71,7 @@ jobs:
       - run: python -m pip install ".[reference]"
       - run: python scripts/run_cpu_validation.py --output cpu-validation.json
       - run: python scripts/run_spatial_validation.py --output spatial-validation.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: always()
         with:
           name: cpu-validation
